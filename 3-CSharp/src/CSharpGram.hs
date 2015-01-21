@@ -10,9 +10,6 @@ data Class = Class Token [Member]
 data Member = MemberD Decl
             | MemberM Type Token [Decl] Stat
             deriving Show
--- test(5,y)
--- void test (int x, int y) dosomething
-
 
 data Stat = StatDecl   Decl
           | StatExpr   Expr
@@ -61,8 +58,7 @@ pExpr = chainr pExprSimple (ExprOper <$> sOperator)
 gen :: [Token] -> Parser Token Expr -> Parser Token Expr
 gen ops p = chainl p (choice (map f ops))
    where f t = ExprOper <$> symbol t
-
--- 9 Priority levels aanmaken voor iedere set operators! En toevoegen aan pExr   
+   
 multis = [Operator "*"]
 addis = [Operator "+"]
 lowest = [Operator "="]

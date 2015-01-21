@@ -13,10 +13,7 @@ import SSM
 data ValueOrAddress = Value | Address
     deriving Show
 
-data Env = Map String Int
--- Sting -> locationMP
-
-codeAlgebra :: CSharpAlgebra Code (Env -> Code) (Env -> Code) (ValueOrAddress -> Env -> Code)
+codeAlgebra :: CSharpAlgebra Code Code Code (ValueOrAddress -> Code)
 codeAlgebra =
     ( fClas
     , (fMembDecl, fMembMeth)
@@ -24,14 +21,14 @@ codeAlgebra =
     , (fExprCon, fExprVar, fExprOp)
     )
 
-fClas :: Token -> [(Env -> Code)] -> Code
+fClas :: Token -> [Code] -> Code
 fClas c ms = [Bsr "main", HALT] ++ concat ms
 
-fMembDecl :: (Decl -> Env) -> (Env -> Code)
-fMembDecl d env = []
+fMembDecl :: Decl -> Code
+fMembDecl d = []
 
-fMembMeth :: Type -> Token -> [Decl] -> (Env -> Code) -> (Env -> Code)
-fMembMeth t (LowerId x) ps (env s) = map (\d -> LDC d Value) ++ [LABEL x] ++ s ++ [RET]
+fMembMeth :: Type -> Token -> [Decl] -> Code -> Code
+fMembMeth t (LowerId x) ps s = [LABEL x] ++ s ++ [RET]
 
 fStatDecl :: Decl -> Code
 fStatDecl d = []
