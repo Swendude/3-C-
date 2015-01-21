@@ -38,13 +38,35 @@ parenthesised p = pack (symbol POpen) p (symbol PClose)
 bracketed     p = pack (symbol SOpen) p (symbol SClose)
 braced        p = pack (symbol COpen) p (symbol CClose)
 
+
+   
 pExprSimple :: Parser Token Expr
 pExprSimple =  ExprConst <$> sConst
            <|> ExprVar   <$> sLowerId
            <|> parenthesised pExpr
 
+
+{- old
+
 pExpr :: Parser Token Expr
 pExpr = chainr pExprSimple (ExprOper <$> sOperator)
+
+-}
+
+-- * new!
+
+gen :: [Token] -> Parser Token Expr -> Parser Token Expr
+gen ops p = chainl p (choice (map f ops))
+   where f t = ExprOper <$> symbol t
+   
+multis = [Operator "*"]
+addis = [Operator "+"]
+lowest = [Operator "="]
+
+pExpr :: Parser Token Expr
+pExpr = foldr gen pExprSimple [lowest, addis, multis]
+
+-- *
 
 
 pMember :: Parser Token Member

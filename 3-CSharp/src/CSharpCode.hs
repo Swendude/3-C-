@@ -2,6 +2,8 @@ module CSharpCode where
 
 import Prelude hiding (LT, GT, EQ)
 import Data.Map as M
+import Data.Char as C
+
 import CSharpLex
 import CSharpGram
 import CSharpAlgebra
@@ -54,6 +56,9 @@ fStatBlock = concat
 
 fExprCon :: Token -> ValueOrAddress -> Code
 fExprCon (ConstInt n) va = [LDC n]
+fExprCon (ConstBool True) va = [LDC 1]
+fExprCon (ConstBool False) va = [LDC 0]
+fExprCon (ConstChar c) va = [LDC (C.ord c)]
 
 fExprVar :: Token -> ValueOrAddress -> Code
 fExprVar (LowerId x) va = let loc = 37 in case va of

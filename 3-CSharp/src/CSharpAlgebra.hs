@@ -41,4 +41,5 @@ foldCSharp (c1, (m1,m2), (s1,s2,s3,s4,s5,s6), (e1,e2,e3)) = fClas
         fExpr (ExprConst  con)      = e1 con
         fExpr (ExprVar    var)      = e2 var
         fExpr (ExprOper   op e1 e2) = e3 op (fExpr e1) (fExpr e2)
-
+        
+        
